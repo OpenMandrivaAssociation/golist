@@ -1,0 +1,45 @@
+#!/bin/sh
+# Needed for second stage bootstrapping (first stage bootstrap is installing
+# from the binary package): This script builds maven in online mode, creating
+# a local repository with all the dependencies (including those that need to
+# be built with maven).
+#
+# (c) 2020 Bernhard Rosenkraenzer <bero@lindev.ch>
+# Released under the terms of the GPLv3
+set -x
+cd "`dirname $0`"
+NAME="`grep ^Name golist.spec |cut -d: -f2- |xargs echo`"
+VERSION="`grep ^Version golist.spec |cut -d: -f2- |xargs echo`"
+URL="`grep ^URL golist.spec |cut -d: -f2- |xargs echo`"
+SOURCE="`grep ^Source0 $NAME.spec |cut -d: -f2- |sed -e "s,%{name},$NAME,g; s,%{version},$VERSION,g;" |xargs echo`"
+MAJOR="`echo $VERSION |cut -d. -f1`"
+
+PKG="`echo $SOURCE |sed -e "s,.*\/,," |xargs echo`"
+DIR="`echo $PKG |sed -e "s,\.tar.*,," |xargs echo`"
+
+#export VENDOR=`pwd`/vendor
+#rm -rf $VENDOR
+
+[ -e $PKG ] || wget $SOURCE
+tar xf $PKG
+
+pushd $DIR 1>/dev/null
+
+# simulate a module
+cat >go.mod <<EOF
+module pagure.io/golist
+
+go 1.11
+EOF
+go mod tidy
+go mod vendor
+
+find vendor
+tar cf ../vendor.tar vendor
+zstd --ultra -22 --rm -f ../vendor.tar
+
+popd 1>/dev/null
+rm -rf repository $DIR
+
+exit 0
+
