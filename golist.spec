@@ -14,7 +14,7 @@ Version:			0.10.4
 
 Summary:	A tool to analyse the properties of a Go (Golang) codebase
 Name:		golist
-Release:	1
+Release:	2
 
 Source0:	https://pagure.io/golist/archive/v%{version}/golist-%{version}.tar.gz
 %if %{with bootstrap2}
