@@ -20,7 +20,7 @@ Source0:	https://pagure.io/golist/archive/v%{version}/golist-%{version}.tar.gz
 %if %{with bootstrap2}
 # Generated from Source100
 Source3:	vendor.tar.zst
-Source100:	golist-github-urfave-cli.sh
+Source100:	golist-package-dependencies.sh
 %endif
 License:	BSD-3-Clause
 URL:		https://pagure.io/golist
