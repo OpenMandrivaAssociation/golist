@@ -1,6 +1,6 @@
 %global debug_package %{nil}
 
-%bcond_without bootstrap2
+%bcond_with bootstrap2
 
 # Run tests in check section
 %bcond_without check
@@ -14,7 +14,7 @@ Version:			0.10.4
 
 Summary:	A tool to analyse the properties of a Go (Golang) codebase
 Name:		golist
-Release:	2
+Release:	3
 
 Source0:	https://pagure.io/golist/archive/v%{version}/golist-%{version}.tar.gz
 %if %{with bootstrap2}
